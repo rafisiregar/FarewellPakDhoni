@@ -1,36 +1,48 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tebak Pahlawan</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tebak Pahlawan</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; }
+        .card { background: white; padding: 20px; border-radius: 15px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        img { border-radius: 10px; margin-bottom: 20px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px; border: 1px solid #ddd; background: white; transition: 0.3s; }
+        button:hover { background: #e0e0e0; }
+        .btn-start { background: #007bff; color: white; border: none; font-size: 1.2rem; }
+    </style>
 </head>
-
 <body>
-<div id="app"></div>
+
+<div id="app" class="card">
+    <p>Memuat game...</p>
+</div>
 
 <script>
 let QUESTIONS = [];
+let currentQIndex = 0;
+let totalScore = 0;
 
-// ambil data dari PHP
-fetch('data.php')
-  .then(res => res.json())
+// REVISI: Ambil data dari file .json (BUKAN .php)
+fetch('data.json')
+  .then(res => {
+      if (!res.ok) throw new Error("Gagal mengambil data.json");
+      return res.json();
+  })
   .then(data => {
     QUESTIONS = data;
     renderStartScreen();
+  })
+  .catch(err => {
+      document.getElementById('app').innerHTML = `<p style="color:red">${err.message}</p>`;
   });
 
-// ================= STATE =================
-let currentMode = 'start';
-let currentQIndex = 0;
-let totalScore = 0;
-let currentQuestionObj = null;
-
-// ================= START =================
 function renderStartScreen() {
   document.getElementById('app').innerHTML = `
-    <h1>TEBAK PAHLAWAN</h1>
-    <button onclick="startGame()">MULAI</button>
+    <h1>🎭 TEBAK PAHLAWAN</h1>
+    <p>Uji pengetahuanmu tentang pahlawan nasional!</p>
+    <button class="btn-start" onclick="startGame()">MULAI GAME</button>
   `;
 }
 
@@ -40,38 +52,33 @@ function startGame() {
   renderQuestion();
 }
 
-// ================= QUESTION =================
 function renderQuestion() {
-  currentQuestionObj = QUESTIONS[currentQIndex];
+  let q = QUESTIONS[currentQIndex];
+  let html = `
+    <p>Soal ${currentQIndex + 1} dari ${QUESTIONS.length}</p>
+    <h2>Siapakah Tokoh Ini?</h2>
+    <img src="${q.img}" width="250" onerror="this.src='https://placehold.co/250x250?text=Gambar+Hilang'">
+    <br>
+  `;
 
-  let html = `<h2>Siapa ini?</h2>`;
-  html += `<img src="${currentQuestionObj.img}" width="200"><br><br>`;
-
-  currentQuestionObj.choices.forEach((c, i) => {
-    html += `<button onclick="answer(${i})">${c.name}</button><br><br>`;
+  q.choices.forEach((c) => {
+    html += `<button onclick="answer('${c.name}')">${c.name}</button><br>`;
   });
 
   document.getElementById('app').innerHTML = html;
 }
 
-// ================= ANSWER =================
-function answer(index) {
-  let selected = currentQuestionObj.choices[index].name;
+function answer(selectedName) {
+  let correct = QUESTIONS[currentQIndex].answer;
 
-  if (selected === currentQuestionObj.answer) {
+  if (selectedName === correct) {
     totalScore++;
-    alert("BENAR!");
+    alert("✅ BENAR!");
   } else {
-    alert("SALAH!");
+    alert("❌ SALAH! Jawabannya adalah: " + correct);
   }
 
-  nextQuestion();
-}
-
-// ================= NEXT =================
-function nextQuestion() {
   currentQIndex++;
-
   if (currentQIndex >= QUESTIONS.length) {
     renderResult();
   } else {
@@ -79,12 +86,12 @@ function nextQuestion() {
   }
 }
 
-// ================= RESULT =================
 function renderResult() {
   document.getElementById('app').innerHTML = `
-    <h2>SELESAI</h2>
-    <p>Skor: ${totalScore}</p>
-    <button onclick="startGame()">ULANGI</button>
+    <h2>🎉 SELESAI!</h2>
+    <p>Skor Akhir Anda:</p>
+    <h1 style="font-size: 3rem;">${totalScore} / ${QUESTIONS.length}</h1>
+    <button class="btn-start" onclick="startGame()">MAIN LAGI</button>
   `;
 }
 </script>
