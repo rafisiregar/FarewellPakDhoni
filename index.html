@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tebak Pahlawan</title>
+</head>
+
+<body>
+<div id="app"></div>
+
+<script>
+let QUESTIONS = [];
+
+// ambil data dari PHP
+fetch('data.php')
+  .then(res => res.json())
+  .then(data => {
+    QUESTIONS = data;
+    renderStartScreen();
+  });
+
+// ================= STATE =================
+let currentMode = 'start';
+let currentQIndex = 0;
+let totalScore = 0;
+let currentQuestionObj = null;
+
+// ================= START =================
+function renderStartScreen() {
+  document.getElementById('app').innerHTML = `
+    <h1>TEBAK PAHLAWAN</h1>
+    <button onclick="startGame()">MULAI</button>
+  `;
+}
+
+function startGame() {
+  currentQIndex = 0;
+  totalScore = 0;
+  renderQuestion();
+}
+
+// ================= QUESTION =================
+function renderQuestion() {
+  currentQuestionObj = QUESTIONS[currentQIndex];
+
+  let html = `<h2>Siapa ini?</h2>`;
+  html += `<img src="${currentQuestionObj.img}" width="200"><br><br>`;
+
+  currentQuestionObj.choices.forEach((c, i) => {
+    html += `<button onclick="answer(${i})">${c.name}</button><br><br>`;
+  });
+
+  document.getElementById('app').innerHTML = html;
+}
+
+// ================= ANSWER =================
+function answer(index) {
+  let selected = currentQuestionObj.choices[index].name;
+
+  if (selected === currentQuestionObj.answer) {
+    totalScore++;
+    alert("BENAR!");
+  } else {
+    alert("SALAH!");
+  }
+
+  nextQuestion();
+}
+
+// ================= NEXT =================
+function nextQuestion() {
+  currentQIndex++;
+
+  if (currentQIndex >= QUESTIONS.length) {
+    renderResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ================= RESULT =================
+function renderResult() {
+  document.getElementById('app').innerHTML = `
+    <h2>SELESAI</h2>
+    <p>Skor: ${totalScore}</p>
+    <button onclick="startGame()">ULANGI</button>
+  `;
+}
+</script>
+
+</body>
+</html>
