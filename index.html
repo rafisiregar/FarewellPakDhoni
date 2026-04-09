@@ -363,26 +363,25 @@
     const FALLBACK_IMG = "https://upload.wikimedia.org/wikipedia/commons/0/01/Presiden_Sukarno.jpg";
     
     const QUESTIONS = [
-      {
-        "answer": "A",
-        "img": SOEKARNO_URL,
-        "choices": [
-          { "name": "A", "img": SOEKARNO_URL },
-          { "name": "B", "img": HATTA_URL },
-          { "name": "C", "img": SOEHARTO_URL }
-        ]
-      },
-      {
-        "answer": "B",
-        "img": HABIBIE_URL,
-        "choices": [
-          { "name": "A", "img": SOEKARNO_URL },
-          { "name": "B", "img": HABIBIE_URL },
-          { "name": "C", "img": HATTA_URL }
-        ]
-      },
-  
-    ];
+  {
+    answer: "A",
+    img: "images/avatar.jpeg",
+    choices: [
+      { name: "A", img: "images/avatar.jpeg" },
+      { name: "B", img: "images/padel.jpeg" },
+      { name: "C", img: "images/rtc.jpeg" }
+    ]
+  },
+  {
+    answer: "B",
+    img: "images/padel.jpeg",
+    choices: [
+      { name: "A", img: "images/avatar.jpeg" },
+      { name: "B", img: "images/padel.jpeg" },
+      { name: "C", img: "images/rtc.jpeg" }
+    ]
+  }
+];
     
     // =============== SISTEM SUARA ===============
     let audioCtx = null;
@@ -813,3 +812,4 @@
 </script>
 </body>
 </html>
+```
