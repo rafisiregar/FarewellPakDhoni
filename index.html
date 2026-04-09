@@ -364,21 +364,21 @@
     
     const QUESTIONS = [
       {
-        "answer": "Ir. Soekarno",
+        "answer": "A",
         "img": SOEKARNO_URL,
         "choices": [
-          { "name": "Ir. Soekarno", "img": SOEKARNO_URL },
-          { "name": "Mohammad Hatta", "img": HATTA_URL },
-          { "name": "Soeharto", "img": SOEHARTO_URL }
+          { "name": "A", "img": SOEKARNO_URL },
+          { "name": "B", "img": HATTA_URL },
+          { "name": "C", "img": SOEHARTO_URL }
         ]
       },
       {
-        "answer": "B.J. Habibie",
+        "answer": "B",
         "img": HABIBIE_URL,
         "choices": [
-          { "name": "Soekarno", "img": SOEKARNO_URL },
-          { "name": "B.J. Habibie", "img": HABIBIE_URL },
-          { "name": "Mohammad Hatta", "img": HATTA_URL }
+          { "name": "A", "img": SOEKARNO_URL },
+          { "name": "B", "img": HABIBIE_URL },
+          { "name": "C", "img": HATTA_URL }
         ]
       },
   
@@ -547,8 +547,8 @@
     
     function renderStartScreen() {
       appContainer.innerHTML = `
-        <h1>🇮🇩 TEBAK WAJAH PAHLAWAN</h1>
-        <p>🎭 400 Keping Puzzle · 60 Detik penuh teka-teki! 🎧 <br> ✨ Kamu bisa coba menjawab berkali-kali hingga jawaban benar ✨<br> Tekan MULAI, tebak dengan cermat!</p>
+        <h1>🇮🇩 TEBAK GAMBAR</h1>
+        <p>🎭 400 Keping Puzzle · 60 Detik penuh teka-teki! 🎧 <br> ✨ Kamu bisa mencoba ✨<br> Tekan MULAI, tebak dengan cermat!</p>
         <button class="btn-start" id="startBtn">🎤 MULAI GAME 🎵</button>
       `;
       const startBtn = document.getElementById('startBtn');
@@ -697,7 +697,7 @@
       // Untuk menyimpan elemen DOM pilihan
       
       appContainer.innerHTML = `
-        <h2 style="color:#FFD966; margin-bottom:10px; font-family: Bangers; font-size: clamp(26px, 6vw, 38px); text-shadow: 2px 2px 0 #b44; text-align:center;">🧐 SIAPAKAH PAHLAWAN INI?</h2>
+        <h2 style="color:#FFD966; margin-bottom:10px; font-family: Bangers; font-size: clamp(26px, 6vw, 38px); text-shadow: 2px 2px 0 #b44; text-align:center;">🧐 GAMBAR APAKAH TADI?</h2>
         <div class="attempt-info" id="attemptInfo">💡 Klik pilihan, jika salah masih bisa coba lagi hingga benar!</div>
         <div class="choices-grid" id="choices"></div>
         <button class="next-question-btn" id="nextBtn" style="display:none">➡️ LANJUT SOAL 🎉</button>
@@ -813,4 +813,3 @@
 </script>
 </body>
 </html>
-```
