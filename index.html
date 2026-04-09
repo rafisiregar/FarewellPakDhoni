@@ -319,6 +319,21 @@
       border: 4px solid #ffd966;
       box-shadow: 0 0 12px gold;
     }
+
+    .result-screen {
+      text-align: center;
+      color: white;
+      display: flex;           /* Mengaktifkan Flexbox */
+      flex-direction: column;  /* Menyusun konten secara vertikal */
+      align-items: center;     /* Menengahkan konten secara horizontal */
+      justify-content: center; /* Menengahkan konten secara vertikal jika ada ruang sisa */
+      width: 100%;
+    }
+
+    .btn-restart {
+      display: block;          /* Memastikan tombol dianggap sebagai block element */
+      margin: 20px auto 0;     /* Memberi jarak atas 20px dan auto kiri-kanan untuk center */
+    }
     
     @media (max-width: 640px) {
       #tebak-root { border-radius: 28px; }
@@ -813,3 +828,4 @@
 </body>
 </html>
 ```
+
