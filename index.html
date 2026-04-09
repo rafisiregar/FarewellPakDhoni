@@ -1,11 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Tebak Wajah Pahlawan</title>
-  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2583/2583344.png">  <style>
-    /* ========== CSS DESAIN MEWAH ====zpL====== */
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Tebak Wajah Pahlawan - Multi Coba & 60 Detik</title>
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2583/2583344.png">
+  <style>
+    /* ========== DESAIN PREMIUM & RESPONSIF LEBIH KOMPAK ========== */
     * {
       user-select: none;
       -webkit-tap-highlight-color: transparent;
@@ -24,7 +26,7 @@
       align-items: center;
       justify-content: center;
       font-family: 'Nunito', sans-serif;
-      padding: 20px;
+      padding: 12px;
     }
 
     #tebak-root {
@@ -35,8 +37,10 @@
       border-radius: 40px;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6);
-      border: 2px solid rgba(255, 215, 0, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      backdrop-filter: blur(2px);
+      transition: all 0.2s ease;
     }
 
     .screen {
@@ -47,108 +51,473 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 30px;
-      min-height: 600px;
+      padding: 16px 12px;
+      min-height: 560px;
     }
 
-    h1 { font-family: 'Bangers', cursive; font-size: 60px; color: #fff; text-shadow: 4px 4px 0 #e63946; margin-bottom: 10px; text-align: center; }
-    p { color: #b8d4ff; font-size: 18px; margin-bottom: 20px; font-weight: 600; text-align: center;}
+    h1 { 
+      font-family: 'Bangers', cursive; 
+      font-size: clamp(32px, 6vw, 48px);
+      color: #fff; 
+      text-shadow: 3px 3px 0 #e63946; 
+      margin-bottom: 6px; 
+      text-align: center; 
+      letter-spacing: 1px;
+    }
+    p { 
+      color: #cae3ff; 
+      font-size: clamp(12px, 3.5vw, 16px); 
+      margin-bottom: 16px; 
+      font-weight: 600; 
+      text-align: center;
+      max-width: 90%;
+    }
 
     .btn-start, .btn-restart, .next-question-btn {
-      background: linear-gradient(135deg, #ff9900, #ff5500);
-      color: #fff; border: none; border-radius: 50px; padding: 15px 40px;
-      font-family: 'Bangers', cursive; font-size: 28px; cursor: pointer;
-      box-shadow: 0 6px 0 #993300; transition: 0.1s; margin-top: 20px;
+      background: linear-gradient(135deg, #ffbb44, #ff6600);
+      color: #fff; 
+      border: none; 
+      border-radius: 60px; 
+      padding: 10px 28px;
+      font-family: 'Bangers', cursive; 
+      font-size: clamp(20px, 5vw, 26px); 
+      cursor: pointer;
+      box-shadow: 0 5px 0 #a33f00; 
+      transition: 0.08s linear; 
+      margin-top: 16px;
+      width: auto;
+      min-width: 180px;
     }
-    .btn-start:active, .next-question-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #993300; }
-
-    /* PUZZLE STYLE */
-    .puzzle-header { width: 100%; display: flex; justify-content: space-between; margin-bottom: 15px; max-width: 600px;}
-    .timer { background: #e63946; padding: 5px 20px; border-radius: 30px; color: #fff; font-size: 24px; font-weight: 900; }
-    .score { background: #f5c842; padding: 5px 20px; border-radius: 30px; color: #000; font-size: 24px; font-weight: 800; }
-    
-    .tile-grid-wrap { background: #000; border-radius: 20px; padding: 10px; border: 4px solid #333; }
-    .tile-grid { display: grid; gap: 1px; background: #222; margin: 0 auto; }
-    .tile { position: relative; overflow: hidden; background: #111; }
-    .tile .cover { position: absolute; inset: 0; background: #2c3e50; transition: opacity 0.3s; z-index: 2; border: 0.1px solid rgba(255,255,255,0.1); }
-    .tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    .action-panel { display: flex; gap: 15px; margin-top: 20px; }
-    .stop-puzzle-btn, .resume-puzzle-btn, .buzz-btn {
-      padding: 10px 25px; border-radius: 30px; border: none; font-family: 'Bangers'; font-size: 20px; cursor: pointer; color: white;
+    .btn-start:active, .next-question-btn:active, .btn-restart:active { 
+      transform: translateY(3px); 
+      box-shadow: 0 2px 0 #a33f00; 
     }
-    .stop-puzzle-btn { background: #f39c12; }
-    .resume-puzzle-btn { background: #27ae60; }
-    .buzz-btn { background: #c0392b; }
 
-    /* CHOICES STYLE */
-    .choices-grid { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
-    .choice-card { background: #162a47; border: 3px solid #34495e; border-radius: 20px; cursor: pointer; padding: 10px; width: 180px; text-align: center; transition: 0.3s; }
-    .choice-card:hover { border-color: #f5c842; transform: scale(1.05); }
-    .choice-card img { width: 100%; height: 130px; object-fit: cover; border-radius: 15px; margin-bottom: 10px; }
-    .choice-name { color: white; font-weight: bold; font-size: 14px; }
+    .puzzle-header { 
+      width: 100%; 
+      display: flex; 
+      justify-content: center;
+      margin-bottom: 12px; 
+      max-width: 700px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .timer { 
+      background: #e63946; 
+      padding: 4px 16px; 
+      border-radius: 40px; 
+      color: #fff; 
+      font-size: clamp(20px, 5vw, 26px); 
+      font-weight: 900; 
+      font-family: monospace;
+      letter-spacing: 2px;
+      box-shadow: 0 3px 0 #851f2a;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .score { 
+      background: #f5c842; 
+      padding: 4px 16px; 
+      border-radius: 40px; 
+      color: #1e2a3a; 
+      font-size: clamp(20px, 5vw, 26px); 
+      font-weight: 800;
+      box-shadow: 0 3px 0 #b87c00;
+      min-width: 90px;
+      text-align: center;
+    }
+
+    .tile-grid-wrap { 
+      background: #000000; 
+      border-radius: 20px; 
+      padding: 8px; 
+      border: 3px solid #f5c842;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 95vw;
+      max-height: 80vh; 
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      scroll-behavior: smooth;
+    }
+
+    .tile-grid { 
+      display: grid; 
+      gap: 1px; 
+      background: #111; 
+      margin: 0 auto;
+      width: min(90vw, 75vh); 
+      height: min(90vw, 75vh);
+      grid-template-columns: repeat(20, 1fr);
+    }
+
+    .tile { 
+      position: relative; 
+      overflow: hidden; 
+      background: #0a1424;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tile .cover { 
+      position: absolute; 
+      inset: 0; 
+      background: linear-gradient(135deg, #2c3e50, #1a2a3a);
+      transition: opacity 0.22s cubic-bezier(0.2, 0.9, 0.4, 1.1); 
+      z-index: 2; 
+      border: 0.5px solid rgba(255,215,0,0.2);
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.6);
+    }
+
+    .tile img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+      display: block; 
+    }
+
+    .action-panel { 
+      display: flex; 
+      gap: 10px; 
+      margin-top: 18px; 
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .stop-puzzle-btn, 
+    .resume-puzzle-btn, 
+    .buzz-btn {
+      padding: 6px 16px; 
+      border-radius: 50px; 
+      border: none; 
+      font-family: 'Bangers'; 
+      font-size: clamp(16px, 4vw, 20px); 
+      cursor: pointer; 
+      color: white;
+      transition: 0.05s linear;
+      letter-spacing: 1px;
+      flex: 0 1 auto;
+      min-width: 95px;
+    }
+
+    .stop-puzzle-btn { 
+      background: #e67e22; 
+      box-shadow: 0 3px 0 #b45f1b; 
+    }
+    .resume-puzzle-btn { 
+      background: #2ecc71; 
+      box-shadow: 0 3px 0 #1e8f4a; 
+    }
+    .buzz-btn { 
+      background: #e74c3c; 
+      box-shadow: 0 3px 0 #a82313; 
+    }
+    .stop-puzzle-btn:active, 
+    .resume-puzzle-btn:active, 
+    .buzz-btn:active { 
+      transform: translateY(2px); 
+      box-shadow: 0 1px 0; 
+    }
+
+    .choices-grid { 
+      display: flex; 
+      gap: 28px;
+      flex-wrap: wrap; 
+      justify-content: center; 
+      margin: 28px 0 20px; 
+      width: 100%;
+    }
+
+    .choice-card { 
+      background: #162a47; 
+      border: 3px solid #2c5282; 
+      border-radius: 28px; 
+      cursor: pointer; 
+      padding: 16px; 
+      width: clamp(220px, 32vw, 320px); 
+      text-align: center; 
+      transition: 0.25s; 
+      box-shadow: 0 8px 0 #0f1e2f;
+    }
+
+    .choice-card:hover { 
+      border-color: #f5c842; 
+      transform: scale(1.07); 
+      background: #1f3a60;
+    }
+
+    .choice-card img { 
+      width: 100%; 
+      aspect-ratio: 3 / 2; 
+      min-height: 180px;
+      object-fit: cover; 
+      border-radius: 20px; 
+      margin-bottom: 14px; 
+      background: #0a1a2f;
+      border: 2px solid gold;
+      display: block;
+    }
+
+    .choice-name { 
+      color: #ffecb3; 
+      font-weight: 900; 
+      font-size: clamp(16px, 4vw, 22px); 
+      letter-spacing: 0.6px;
+      word-break: break-word;
+    }
+
+    /* Efek untuk jawaban yang sudah dicoba (salah) */
+    .choice-card.wrong-attempt {
+      opacity: 0.65;
+      filter: grayscale(0.4);
+      border-color: #aa2e1e;
+      transform: scale(0.98);
+      cursor: not-allowed;
+      pointer-events: none;
+      text-decoration: line-through;
+      background: #4a1a12;
+    }
     
-    .correct-feedback { background: #27ae60 !important; border-color: #2ecc71 !important; }
-    .wrong-feedback { background: #c0392b !important; border-color: #e74c3c !important; }
+    /* Jawaban benar: tetap menang, tidak bisa diklik lagi setelah benar */
+    .choice-card.correct-feedback { 
+      background: #27ae60 !important; 
+      border-color: #f1c40f !important; 
+      transform: scale(1.08);
+      box-shadow: 0 0 30px #2ecc71;
+      pointer-events: none;
+      cursor: default;
+    }
+    
+    .choice-card.wrong-feedback { 
+      background: #c0392b !important; 
+      border-color: #e67e22 !important; 
+      filter: brightness(0.95);
+      /* Tapi tetap bisa diklik jika belum benar? aturan multi-coba: kita akan tetap mengaktifkan,
+         namun setelah dipilih akan ditandai & dinonaktifkan untuk coba berikutnya */
+    }
 
-    .result-screen { text-align: center; color: white; }
+    /* Info sisa kesempatan atau hint */
+    .attempt-info {
+      background: #1e2a47;
+      padding: 8px 20px;
+      border-radius: 40px;
+      color: #ffd966;
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 15px;
+      text-align: center;
+      display: inline-block;
+    }
+    
+    .correct-highlight {
+      border: 4px solid #ffd966;
+      box-shadow: 0 0 12px gold;
+    }
+    
+    @media (max-width: 640px) {
+      #tebak-root { border-radius: 28px; }
+      .screen { padding: 12px 10px; }
+      .tile-grid-wrap { padding: 6px; }
+      .choice-card { padding: 6px; }
+      .btn-start, .next-question-btn { padding: 8px 18px; min-width: 140px; }
+      .action-panel { gap: 6px; }
+    }
+    
+    @media (max-width: 480px) {
+      .stop-puzzle-btn, .resume-puzzle-btn, .buzz-btn { padding: 5px 12px; min-width: 80px; font-size: 14px; }
+      .timer, .score { padding: 3px 10px; font-size: 16px; min-width: 85px; }
+      .tile-grid { gap: 0.5px; }
+    }
   </style>
 </head>
 <body>
 
 <div id="tebak-root">
-  <div class="screen" id="app">
-    </div>
+  <div class="screen" id="app"></div>
 </div>
 
 <script>
   (function() {
-    // DATA LANGSUNG DI SINI (TIDAK PERLU FETCH LAGI)
+    // =============== 400 KEPING PUZZLE (20x20) ===============
+    const PUZZLE_COLS = 20;
+    const PUZZLE_ROWS = 20;
+    const TOTAL_TILES = PUZZLE_COLS * PUZZLE_ROWS; // = 400
+    
+    // ⏱ Pengungkapan penuh 60 detik (150ms per keping)
+    const REVEAL_INTERVAL_MS = 150;   // 150ms x 400 = 60.000 ms = 60 detik
+    const MAX_TIME = 60;              // countdown timer 60 detik
+    
+    // Daftar Soal Pahlawan
+    const SOEKARNO_URL = "https://upload.wikimedia.org/wikipedia/commons/0/01/Presiden_Sukarno.jpg";
+    const HATTA_URL = "https://upload.wikimedia.org/wikipedia/commons/4/4c/Mohammad_Hatta_NA.jpg";
+    const SOEHARTO_URL = "https://upload.wikimedia.org/wikipedia/commons/5/59/President_Suharto%2C_1993.jpg";
+    const HABIBIE_URL = "https://upload.wikimedia.org/wikipedia/commons/d/d6/B.J_Habibie_1998.jpg";
+    const MEGAWATI_URL = "https://upload.wikimedia.org/wikipedia/commons/8/85/Megawati_Soekarnoputri_2019_Official_Portrait.jpg";
+    
+    const FALLBACK_IMG = "https://upload.wikimedia.org/wikipedia/commons/0/01/Presiden_Sukarno.jpg";
+    
     const QUESTIONS = [
       {
         "answer": "Ir. Soekarno",
-        "img": "images/soekarno.jpeg",
+        "img": SOEKARNO_URL,
         "choices": [
-          { "name": "Ir. Soekarno", "img": "images/soekarno.jpeg" },
-          { "name": "Moh. Hatta", "img": "images/moh-hatta.jpeg" },
-          { "name": "Soeharto", "img": "images/soeharto.jpeg" }
-        ]
-      },
-      {
-        "answer": "Moh. Hatta",
-        "img": "images/moh-hatta.jpeg",
-        "choices": [
-          { "name": "Ir. Soekarno", "img": "images/soekarno.jpeg" },
-          { "name": "Moh. Hatta", "img": "images/moh-hatta.jpeg" },
-          { "name": "B.J. Habibie", "img": "images/bj-habibie.jpeg" }
-        ]
-      },
-      {
-        "answer": "Soeharto",
-        "img": "images/soeharto.jpeg",
-        "choices": [
-          { "name": "Soeharto", "img": "images/soeharto.jpeg" },
-          { "name": "B.J. Habibie", "img": "images/bj-habibie.jpeg" },
-          { "name": "Moh. Hatta", "img": "images/moh-hatta.jpeg" }
+          { "name": "Ir. Soekarno", "img": SOEKARNO_URL },
+          { "name": "Mohammad Hatta", "img": HATTA_URL },
+          { "name": "Soeharto", "img": SOEHARTO_URL }
         ]
       },
       {
         "answer": "B.J. Habibie",
-        "img": "images/bj-habibie.jpeg",
+        "img": HABIBIE_URL,
         "choices": [
-          { "name": "Ir. Soekarno", "img": "images/soekarno.jpeg" },
-          { "name": "B.J. Habibie", "img": "images/bj-habibie.jpeg" },
-          { "name": "Soeharto", "img": "images/soeharto.jpeg" }
+          { "name": "Soekarno", "img": SOEKARNO_URL },
+          { "name": "B.J. Habibie", "img": HABIBIE_URL },
+          { "name": "Mohammad Hatta", "img": HATTA_URL }
         ]
-      }
+      },
+  
     ];
-
-    const COLS = 8;
-    const ROWS = 6;
-    const TOTAL_TILES = COLS * ROWS;
-    const REVEAL_INTERVAL_MS = 500;
-    const MAX_TIME = 30;
-
+    
+    // =============== SISTEM SUARA ===============
+    let audioCtx = null;
+    let isAudioAllowed = false;
+    
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch(e) { console.warn("Audio tidak didukung"); }
+    }
+    
+    function playCorrectSound() {
+      if (!audioCtx || !isAudioAllowed) return;
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = "sine";
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.28, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
+        osc.start();
+        osc.stop(now + 0.65);
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.type = "triangle";
+        osc2.frequency.value = 1046.5;
+        gain2.gain.setValueAtTime(0.12, now);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+        osc2.start();
+        osc2.stop(now + 0.5);
+      } catch(e) {}
+    }
+    
+    function playWrongSound() {
+      if (!audioCtx || !isAudioAllowed) return;
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = "sawtooth";
+        osc.frequency.value = 360;
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+        osc.start();
+        osc.stop(now + 0.45);
+      } catch(e) {}
+    }
+    
+    function playRevealSound() {
+      if (!audioCtx || !isAudioAllowed) return;
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = "sine";
+        osc.frequency.value = 523.25;
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+        osc.start();
+        osc.stop(now + 0.1);
+      } catch(e) {}
+    }
+    
+    function playStartGameSound() {
+      if (!audioCtx || !isAudioAllowed) return;
+      try {
+        const now = audioCtx.currentTime;
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.type = "square";
+        osc1.frequency.value = 523.25;
+        gain1.gain.setValueAtTime(0.2, now);
+        gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+        osc1.start();
+        osc1.stop(now + 0.3);
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.type = "square";
+        osc2.frequency.value = 783.99;
+        gain2.gain.setValueAtTime(0.2, now + 0.12);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+        osc2.start(now + 0.12);
+        osc2.stop(now + 0.45);
+      } catch(e) {}
+    }
+    
+    function playGameOverSound() {
+      if (!audioCtx || !isAudioAllowed) return;
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = "sawtooth";
+        osc.frequency.value = 293.66;
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+        osc.start();
+        osc.stop(now + 0.9);
+      } catch(e) {}
+    }
+    
+    function playTimeWarningSound() {
+      if (!audioCtx || !isAudioAllowed) return;
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = "triangle";
+        osc.frequency.value = 740;
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+        osc.start();
+        osc.stop(now + 0.25);
+      } catch(e) {}
+    }
+    
+    // state game
     let currentQIndex = 0;
     let totalScore = 0;
     let puzzleInterval = null;
@@ -157,9 +526,10 @@
     let isPaused = false;
     let currentRevealStep = 0;
     let tileOrder = [];
+    let currentCoverElements = [];
     
     const appContainer = document.getElementById('app');
-
+    
     function shuffleArray(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -167,139 +537,280 @@
       }
       return arr;
     }
-
+    
     function stopAllTimers() {
-      clearInterval(puzzleInterval);
-      clearInterval(timerInterval);
+      if (puzzleInterval) clearInterval(puzzleInterval);
+      if (timerInterval) clearInterval(timerInterval);
+      puzzleInterval = null;
+      timerInterval = null;
     }
-
+    
     function renderStartScreen() {
       appContainer.innerHTML = `
-        <h1>🎭 TEBAK WAJAH</h1>
-        <p>Bisakah kamu menelebak Pahlawan Nasional sebelum puzzle terbuka semua?</p>
-        <button class="btn-start" id="startBtn">MULAI GAME</button>
+        <h1>🇮🇩 TEBAK WAJAH PAHLAWAN</h1>
+        <p>🎭 400 Keping Puzzle · 60 Detik penuh teka-teki! 🎧 <br> ✨ Kamu bisa coba menjawab berkali-kali hingga jawaban benar ✨<br> Tekan MULAI, tebak dengan cermat!</p>
+        <button class="btn-start" id="startBtn">🎤 MULAI GAME 🎵</button>
       `;
-      document.getElementById('startBtn').onclick = renderPuzzleScreen;
+      const startBtn = document.getElementById('startBtn');
+      startBtn.onclick = () => {
+        initAudio();
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().then(() => {
+            isAudioAllowed = true;
+            playStartGameSound();
+            renderPuzzleScreen();
+          }).catch(() => { isAudioAllowed = false; renderPuzzleScreen(); });
+        } else {
+          isAudioAllowed = true;
+          if (audioCtx) playStartGameSound();
+          renderPuzzleScreen();
+        }
+      };
     }
-
+    
+    function buildTileFragment(imgUrl, row, col, totalCols, totalRows) {
+      const xPercent = (col / (totalCols - 1)) * 100;
+      const yPercent = (row / (totalRows - 1)) * 100;
+      return `<img src="${imgUrl}" alt="fragment" style="position: absolute; top: 0; left: 0; width: ${totalCols * 100}%; height: ${totalRows * 100}%; object-fit: none; object-position: ${xPercent}% ${yPercent}%; pointer-events: none;" onerror="this.onerror=null;this.src='${FALLBACK_IMG}';">`;
+    }
+    
     function renderPuzzleScreen() {
+      stopAllTimers();
       isPaused = false;
       currentRevealStep = 0;
       timeLeft = MAX_TIME;
       tileOrder = shuffleArray(Array.from({ length: TOTAL_TILES }, (_, i) => i));
+      currentCoverElements = [];
       
       appContainer.innerHTML = `
         <div class="puzzle-header">
-          <div class="timer" id="timer">0:${timeLeft}</div>
+          <div class="timer" id="timer">01:00</div>
           <div class="score">🏆 ${totalScore}</div>
         </div>
-        <div class="tile-grid-wrap"><div class="tile-grid" id="grid"></div></div>
+        <div class="tile-grid-wrap">
+          <div class="tile-grid" id="grid" style="grid-template-columns: repeat(${PUZZLE_COLS}, minmax(0, 1fr));"></div>
+        </div>
         <div class="action-panel">
-          <button class="stop-puzzle-btn" id="pauseBtn">⏸ STOP</button>
+          <button class="stop-puzzle-btn" id="pauseBtn">⏸ JEDA</button>
           <button class="resume-puzzle-btn" id="resumeBtn" style="display:none">▶ LANJUT</button>
-          <button class="buzz-btn" id="buzzBtn">🔔 JAWAB!</button>
+          <button class="buzz-btn" id="buzzBtn">🔔 JAWAB SEKARANG!</button>
         </div>
       `;
       
-      const grid = document.getElementById('grid');
-      const containerWidth = Math.min(500, window.innerWidth * 0.85);
-      const tileSize = Math.floor(containerWidth / COLS);
-      grid.style.gridTemplateColumns = `repeat(${COLS}, ${tileSize}px)`;
-      
+      const gridContainer = document.getElementById('grid');
       const q = QUESTIONS[currentQIndex];
+      const imgUrl = q.img;
+      
+      gridContainer.innerHTML = '';
+      
       for (let i = 0; i < TOTAL_TILES; i++) {
-        const r = Math.floor(i / COLS);
-        const c = i % COLS;
+        const row = Math.floor(i / PUZZLE_COLS);
+        const col = i % PUZZLE_COLS;
         const tile = document.createElement('div');
         tile.className = 'tile';
-        tile.style.width = tile.style.height = `${tileSize}px`;
-        tile.innerHTML = `
-          <img src="${q.img}" style="object-position: ${(c/(COLS-1))*100}% ${(r/(ROWS-1))*100}%; width:${COLS*100}%; height:${ROWS*100}%; max-width:none; margin-left:-${c*100}%; margin-top:-${r*100}%;">
-          <div class="cover" id="cover-${i}"></div>
-        `;
-        grid.appendChild(tile);
+        tile.style.aspectRatio = '1 / 1';
+        tile.style.position = 'relative';
+        tile.style.overflow = 'hidden';
+        const fragmentHtml = buildTileFragment(imgUrl, row, col, PUZZLE_COLS, PUZZLE_ROWS);
+        tile.innerHTML = fragmentHtml;
+        const coverDiv = document.createElement('div');
+        coverDiv.className = 'cover';
+        coverDiv.id = `cover-${i}`;
+        coverDiv.style.opacity = '1';
+        coverDiv.style.position = 'absolute';
+        coverDiv.style.inset = '0';
+        coverDiv.style.zIndex = '2';
+        coverDiv.style.background = 'linear-gradient(135deg, #2c3e50, #1a2a3a)';
+        coverDiv.style.border = '0.5px solid rgba(255,215,0,0.2)';
+        tile.appendChild(coverDiv);
+        gridContainer.appendChild(tile);
+        currentCoverElements.push({ cover: coverDiv, id: i });
       }
-
-      document.getElementById('pauseBtn').onclick = () => { isPaused = true; updateBtns(true); };
-      document.getElementById('resumeBtn').onclick = () => { isPaused = false; updateBtns(false); };
-      document.getElementById('buzzBtn').onclick = () => goToChoices("buzz");
-
-      function updateBtns(p) {
-        document.getElementById('pauseBtn').style.display = p ? 'none' : 'block';
-        document.getElementById('resumeBtn').style.display = p ? 'block' : 'none';
-      }
-
-      startFlow();
+      
+      document.getElementById('pauseBtn').onclick = () => {
+        if (!isPaused) {
+          isPaused = true;
+          document.getElementById('pauseBtn').style.display = 'none';
+          document.getElementById('resumeBtn').style.display = 'block';
+        }
+      };
+      document.getElementById('resumeBtn').onclick = () => {
+        if (isPaused) {
+          isPaused = false;
+          document.getElementById('pauseBtn').style.display = 'block';
+          document.getElementById('resumeBtn').style.display = 'none';
+          if (isAudioAllowed && audioCtx) playRevealSound();
+        }
+      };
+      document.getElementById('buzzBtn').onclick = () => {
+        if (isAudioAllowed && audioCtx) playRevealSound();
+        goToChoices("buzz");
+      };
+      
+      startRevealAndTimer();
     }
-
-    function startFlow() {
+    
+    function startRevealAndTimer() {
       puzzleInterval = setInterval(() => {
         if (isPaused) return;
-        if (currentRevealStep >= TOTAL_TILES) return goToChoices("full");
-        document.getElementById(`cover-${tileOrder[currentRevealStep]}`).style.opacity = '0';
+        if (currentRevealStep >= TOTAL_TILES) {
+          if (puzzleInterval) clearInterval(puzzleInterval);
+          goToChoices("full_reveal");
+          return;
+        }
+        const tileIndex = tileOrder[currentRevealStep];
+        const coverObj = currentCoverElements.find(el => el.id === tileIndex);
+        if (coverObj && coverObj.cover) {
+          coverObj.cover.style.opacity = '0';
+          if (isAudioAllowed && audioCtx && currentRevealStep % 20 === 0) playRevealSound();
+        }
         currentRevealStep++;
       }, REVEAL_INTERVAL_MS);
-
+      
       timerInterval = setInterval(() => {
         if (isPaused) return;
+        if (timeLeft <= 0) {
+          if (timerInterval) clearInterval(timerInterval);
+          goToChoices("timeout");
+          return;
+        }
         timeLeft--;
-        document.getElementById('timer').innerText = `0:${timeLeft < 10 ? '0'+timeLeft : timeLeft}`;
-        if (timeLeft <= 0) goToChoices("timeout");
+        const timerEl = document.getElementById('timer');
+        if (timerEl) {
+          const minutes = Math.floor(timeLeft / 60);
+          const seconds = timeLeft % 60;
+          const formatted = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          timerEl.innerText = formatted;
+        }
+        if (timeLeft <= 5 && timeLeft > 0 && isAudioAllowed && audioCtx) {
+          if (timeLeft === 5 || timeLeft === 2) playTimeWarningSound();
+        }
       }, 1000);
     }
-
+    
+    // ========== MULTI COBA: User bisa memilih sampai jawaban benar ==========
     function goToChoices(mode) {
       stopAllTimers();
       const q = QUESTIONS[currentQIndex];
+      // set data pilihan yang tersedia (awalnya semua aktif)
+      let hasAnsweredCorrect = false;
+      // Untuk menyimpan elemen DOM pilihan
       
       appContainer.innerHTML = `
-        <h2 style="color:white; margin-bottom:20px;">SIAPA TOKOH INI?</h2>
+        <h2 style="color:#FFD966; margin-bottom:10px; font-family: Bangers; font-size: clamp(26px, 6vw, 38px); text-shadow: 2px 2px 0 #b44; text-align:center;">🧐 SIAPAKAH PAHLAWAN INI?</h2>
+        <div class="attempt-info" id="attemptInfo">💡 Klik pilihan, jika salah masih bisa coba lagi hingga benar!</div>
         <div class="choices-grid" id="choices"></div>
-        <button class="next-question-btn" id="nextBtn" style="display:none">SOAL BERIKUTNYA ➡️</button>
+        <button class="next-question-btn" id="nextBtn" style="display:none">➡️ LANJUT SOAL 🎉</button>
       `;
-
+      
       const choiceBox = document.getElementById('choices');
-      q.choices.forEach(c => {
+      const attemptInfo = document.getElementById('attemptInfo');
+      
+      // Buat card untuk setiap pilihan
+      const choiceCards = [];
+      q.choices.forEach((c, idx) => {
         const div = document.createElement('div');
         div.className = 'choice-card';
-        div.innerHTML = `<img src="${c.img}"><div class="choice-name">${c.name}</div>`;
+        div.setAttribute('data-choice-name', c.name);
+        div.innerHTML = `<img src="${c.img}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'" style="width:100%; aspect-ratio:4/3; object-fit:cover;"><div class="choice-name">${c.name}</div>`;
         div.onclick = () => {
-          if(document.querySelector('.correct-feedback')) return;
-          if(c.name === q.answer) {
-            div.classList.add('correct-feedback');
+          // jika sudah ada jawaban benar, tidak boleh memilih lagi
+          if (hasAnsweredCorrect) return;
+          // jika pilihan ini sudah ditandai salah sebelumnya (class wrong-attempt) maka tidak bisa diklik lagi
+          if (div.classList.contains('wrong-attempt')) return;
+          
+          if (c.name === q.answer) {
+            // JAWABAN BENAR!
+            hasAnsweredCorrect = true;
             totalScore++;
-          } else {
-            div.classList.add('wrong-feedback');
-            // Tunjukkan yang benar
-            Array.from(choiceBox.children).forEach(child => {
-              if(child.innerText === q.answer) child.classList.add('correct-feedback');
+            div.classList.add('correct-feedback');
+            if (isAudioAllowed && audioCtx) playCorrectSound();
+            attemptInfo.innerHTML = "✅ BENAR! Luar biasa. Lanjut ke soal berikutnya ✅";
+            // Nonaktifkan semua pilihan lain yang belum terdisable, beri efek mereka disable
+            document.querySelectorAll('.choice-card').forEach(card => {
+              if (!card.classList.contains('correct-feedback')) {
+                card.style.opacity = "0.5";
+                card.style.pointerEvents = "none";
+                card.classList.add('wrong-attempt'); // biar style konsisten
+              }
             });
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) nextBtn.style.display = 'block';
+          } else {
+            // JAWABAN SALAH: Tandai pilihan ini sebagai salah dan nonaktifkan pilihan ini untuk percobaan berikutnya
+            div.classList.add('wrong-attempt');
+            div.classList.add('wrong-feedback');
+            if (isAudioAllowed && audioCtx) playWrongSound();
+            attemptInfo.innerHTML = `❌ Jawaban "${c.name}" kurang tepat. Coba pilih opsi lain! ❌`;
+            // Tidak langsung menampilkan jawaban benar, hanya mendisable opsi yang salah, biarkan user coba lagi
+            // Jika user sudah tidak punya pilihan tersisa (semua nonaktif kecuali yg benar? tapi masih ada yang belum dipilih dan benar) -> user bisa coba lagi
+            // Cek apakah semua pilihan selain jawaban benar sudah wrong-attempt
+            const allChoices = Array.from(choiceBox.children);
+            const remainingActive = allChoices.filter(choice => {
+              const nameAttr = choice.getAttribute('data-choice-name');
+              return !choice.classList.contains('wrong-attempt') && nameAttr !== q.answer;
+            });
+            // Jika tidak ada pilihan aktif selain jawaban benar, maka otomatis sorot jawaban benar agar user tahu?
+            const correctCard = allChoices.find(choice => choice.getAttribute('data-choice-name') === q.answer);
+            if (remainingActive.length === 0 && correctCard && !hasAnsweredCorrect) {
+              // tidak ada opsi tersisa selain jawaban benar -> user otomatis harus klik jawaban benar
+              attemptInfo.innerHTML = "✨ Semua pilihan salah sudah dicoba, sekarang klik jawaban yang benar! ✨";
+              correctCard.classList.add('correct-highlight');
+              // Beri efek sorot tapi tetap harus diklik untuk mendapatkan poin
+              // namun biarkan user mengkliknya
+            }
           }
-          document.getElementById('nextBtn').style.display = 'block';
         };
         choiceBox.appendChild(div);
+        choiceCards.push(div);
       });
-
+      
+      // Tombol lanjut
       document.getElementById('nextBtn').onclick = () => {
+        if (isAudioAllowed && audioCtx) {
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = "sine";
+          osc.frequency.value = 659.25;
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+          osc.start();
+          osc.stop(now + 0.25);
+        }
         currentQIndex++;
-        if(currentQIndex < QUESTIONS.length) renderPuzzleScreen();
-        else renderResult();
+        if (currentQIndex < QUESTIONS.length) {
+          renderPuzzleScreen();
+        } else {
+          renderResult();
+        }
       };
     }
-
+    
     function renderResult() {
+      stopAllTimers();
+      if (isAudioAllowed && audioCtx) playGameOverSound();
       appContainer.innerHTML = `
         <div class="result-screen">
-          <h1 style="font-size:80px;">🏆</h1>
-          <h1>QUIZ SELESAI!</h1>
-          <p>Skor Kamu: ${totalScore} dari ${QUESTIONS.length}</p>
-          <button class="btn-restart" onclick="location.reload()">ULANGI GAME</button>
+          <h1 style="font-size:clamp(50px,12vw,80px);">🏆🎖️</h1>
+          <h1>LUAR BIASA!</h1>
+          <p>Skor Akhir : ${totalScore} dari ${QUESTIONS.length}</p>
+          <p style="font-size:clamp(13px,4vw,17px); margin-top:15px;">⚡ Kamu berhasil menembus 400 keping puzzle dalam 60 detik & berhak memilih hingga jawaban tepat! ⚡</p>
+          <button class="btn-restart" id="restartBtn">🔄 MAIN LAGI</button>
         </div>
       `;
+      document.getElementById('restartBtn').onclick = () => {
+        currentQIndex = 0;
+        totalScore = 0;
+        renderStartScreen();
+      };
     }
-
+    
     renderStartScreen();
   })();
 </script>
 </body>
 </html>
+```
